@@ -18,6 +18,7 @@ public class BaptisterioPaleocristianoDelSigloPrimero {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        TicketMachine ticketMachine = TicketMachine.getInstance();
         String option = "";
         
         System.out.println("De momento está usté servidoo. Vamono pal baptisterioo \n");
@@ -33,8 +34,8 @@ public class BaptisterioPaleocristianoDelSigloPrimero {
             
             option = sc.nextLine();
             switch (option){
-                case "1" -> optionBuy(sc);
-                case "2" -> optionShowTickets();
+                case "1" -> optionBuy(sc, ticketMachine);
+                case "2" -> optionShowTickets(ticketMachine);
                 case "3" -> System.out.println("""
                                 Te vengo a desiiiii
                                 te vengo a desiiiii
@@ -55,24 +56,29 @@ public class BaptisterioPaleocristianoDelSigloPrimero {
         }
     }
     
-    private static void optionBuy(Scanner sc){
+    /*
+        Method when you choose to buy tickets from the main menu
+    */
+    private static void optionBuy(Scanner sc, TicketMachine ticketMachine){
         System.out.println("Pa cuando quiere usté veniiiii");
 //        sc.next();
         String dateBuy = sc.nextLine();
         try{
             LocalDate date = LocalDate.parse(dateBuy);
-            if(TicketMachine.getAvailableTickets(date) == 0){
+            if(ticketMachine.getAvailableTickets(date) == 0){
                 System.out.println("No quedaan tikees a la ventaa para ese diaa, zi zeño");
             }else{
-                System.out.println("Tieneee dihponiblee " + TicketMachine.getAvailableTickets(date) + " tikee pa ese diaa, zi zeño");
+                System.out.println("Tieneee dihponiblee " + ticketMachine.getAvailableTickets(date) + " tikee pa ese diaa, zi zeño");
                 System.out.println("Cuantoooo tikee vah a compraaa?");
                 try{
                     int numTickets = sc.nextInt();
                     System.out.println("Dame el dineros en efestivoooo, no bisun");
                     int money = sc.nextInt();
-                    TicketMachine.buy(date, money, numTickets);
+                    ticketMachine.buy(date, money, numTickets);
                 }catch(InputMismatchException e){
                     System.out.println("esooo no son numerooo");
+                } catch (IllegalArgumentException ex) {
+                    System.out.println(ex.getMessage());
                 }
                 
             }
@@ -82,9 +88,12 @@ public class BaptisterioPaleocristianoDelSigloPrimero {
         
     }
     
-    public static void optionShowTickets(){
+    /*
+        Method to show all tickets sold when you choose it from the main menu
+    */
+    public static void optionShowTickets(TicketMachine ticketMachine){
         System.out.println("--------------------------------");
-        System.out.println(TicketMachine.getAllTicketsSold());
+        System.out.println(ticketMachine.getAllTicketsSold());
         System.out.println("---------------------------------");
     }
 }
